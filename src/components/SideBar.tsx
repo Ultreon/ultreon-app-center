@@ -6,7 +6,7 @@ import './SideBar.css';
 export default function SideBar() {
     return (
         <div id="SideBar">
-            <a href="#"><MdHome/></a>
+            <a href="#home"><MdHome/></a>
             <a href="#apps"><MdApps/></a>
         </div>
     )

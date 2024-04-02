@@ -276,3 +276,7 @@ a:hover {
     bottom: 35px;
     color: black;
 }
+
+.RefreshButton {
+    margin: 8px;
+}

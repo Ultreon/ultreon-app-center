@@ -13,7 +13,7 @@ import {window as appWindow} from "@tauri-apps/api";
 
 const router = createHashRouter([
     {
-        path: "/",
+        path: "home",
         element: <HomePage/>,
         errorElement: <h1>Error 404</h1>,
     },
@@ -22,10 +22,10 @@ const router = createHashRouter([
         element: <AppsPage/>,
         errorElement: <h1>Error 404</h1>
     },
-    // {
-    //     path: "instances",
-    //     element: <InstancesPage/>
-    // },
+    {
+        path: "/",
+        element: <>{window.location.href = "#home"}</>
+    },
     {
         path: "project",
         element: <ProjectPage/>

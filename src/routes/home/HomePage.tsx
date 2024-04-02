@@ -1,11 +1,17 @@
-import {MouseEvent, ReactElement, useEffect, useState} from 'react';
+import {
+    MouseEvent,
+    ReactElement,
+    useEffect,
+    useState
+} from 'react';
 import './HomePage.css';
 import {invoke} from '@tauri-apps/api'
 import {listen} from '@tauri-apps/api/event'
-import {load, Profile, PROFILES} from '../../util/Profiles.tsx';
+import {load, Profile, getProfiles} from '../../util/Profiles.tsx';
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ToastComponent from "../../components/CustomToast.tsx";
+import {MdRefresh} from "react-icons/md";
 
 let selectedProfile: Profile | null = null;
 
@@ -82,8 +88,7 @@ function ProfileEntry(element: Profile, selected: boolean, onClick: (profile: Pr
         if (event.currentTarget.classList.contains('Disabled')) return;
 
         const elem = event.currentTarget
-        if (PROFILES.length === 0) await load();
-        const app = PROFILES.find(value => value.app == elem.ariaLabel)
+        const app = (getProfiles()).find(value => value.app == elem.ariaLabel)
         selectedProfile = app === undefined ? null : app;
 
         if (selectedProfile === null) {
@@ -97,7 +102,8 @@ function ProfileEntry(element: Profile, selected: boolean, onClick: (profile: Pr
     }
 
     return (
-        <button className={selected ? "ProfileEntry Selected" : "ProfileEntry"} aria-label={element.app} key={element.app} type="button"
+        <button className={selected ? "ProfileEntry Selected" : "ProfileEntry"} aria-label={element.app}
+                key={element.app} type="button"
                 onClick={SelectProfile}>
             {element.name}
         </button>
@@ -141,26 +147,13 @@ export class DownloadInfo {
     }
 }
 
+let loaded = false
+
 export default function HomePage() {
-    const [items, setItems] = useState<Profile[]>(PROFILES);
+    const [items, setItems] = useState<Profile[]>(getProfiles());
     const [newItem, setNewItem] = useState<Profile | null>(null);
     const [progress, setProgress] = useState<DownloadInfo>(new DownloadInfo());
     const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
-
-    useEffect(() => {
-        const loadProfiles = async () => {
-            try {
-                if (PROFILES.length === 0) await load();
-
-                setItems(PROFILES);
-            } catch (error) {
-                console.error('Error loading profiles:', error);
-            }
-        };
-
-        loadProfiles().then(() => {
-        });
-    }, []);
 
     useEffect(() => {
         if (newItem !== null) {
@@ -169,14 +162,31 @@ export default function HomePage() {
             });
             setNewItem(null);
         }
+
+        setItems(getProfiles())
     }, [newItem]);
 
     const LIST = (
         <div id="SidePanel">
-            {items.filter((item, pos, self) => self.findIndex(it => item.name == it.name) == pos).map((profile) => ProfileEntry(profile, selectedProfile === profile, setSelectedProfile))}
+            {
+                items.length > 0
+                    ? <div>
+                        {items.filter((item, pos, self) => self.findIndex(it => item.name == it.name) == pos).map((profile) => {
+                            if (profile === null) return <></>;
+                            return ProfileEntry(profile, selectedProfile === profile, setSelectedProfile)
+                        })
+                        }
+                    </div> : <>
+                        <p>No profiles</p>
+                        <button id="RefreshButtonHome" type="button" className="RefreshButton" onClick={async () => {
+                            setItems([])
+                            await load();
+                            setItems(getProfiles());
+                        }}><MdRefresh/></button>
+                    </>
+            }
         </div>
     )
-
     async function importProfile(name: string) {
         try {
             console.log("Attempting to import profile:" + name);
@@ -187,9 +197,8 @@ export default function HomePage() {
             }
 
             console.log("Imported profile: %s", profile.name);
-            if (PROFILES.length === 0) await load();
-            PROFILES.push(profile);
-            console.log(PROFILES);
+            (getProfiles()).push(profile);
+            console.log(getProfiles());
 
             setNewItem(profile)
             hideModal();
@@ -224,6 +233,17 @@ export default function HomePage() {
             </div>
         </div>
     )
+
+    useEffect(() => {
+        (async () => {
+            if (loaded) return
+            setItems([])
+            await load().then(profiles => {
+                setItems(profiles)
+                loaded = true
+            });
+        })();
+    });
 
     return (
         <>
