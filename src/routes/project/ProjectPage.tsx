@@ -191,7 +191,7 @@ export default function ProjectPage() {
                     <p><i>{project.summary}</i></p>
                     <div className={progress.downloading ? 'ProgressBar Bottom Shown' : 'ProgressBar'}>
                         <div id="MainProgressBar" className='ProgressBarInner'
-                             style={{width: (progress.percent) + "%"}}/>
+                             style={{width: progress.percent + "%"}}/>
                         <div id="MainProgressStatus" className='ProgressStatus'>
                             {progress.status}
                         </div>

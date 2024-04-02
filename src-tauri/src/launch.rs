@@ -1,8 +1,7 @@
-use std::os::unix;
 #[cfg(target_os = "windows")]
 use std::os::windows::process::CommandExt;
 use std::path::PathBuf;
-use std::process::{exit, ExitCode, ExitStatus, Stdio};
+use std::process::{ExitStatus, Stdio};
 use std::process;
 
 use tauri::Window;
