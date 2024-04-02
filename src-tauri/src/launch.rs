@@ -1,7 +1,8 @@
+use std::os::unix;
 #[cfg(target_os = "windows")]
 use std::os::windows::process::CommandExt;
 use std::path::PathBuf;
-use std::process::{exit, ExitStatus, Stdio};
+use std::process::{exit, ExitCode, ExitStatus, Stdio};
 use std::process;
 
 use tauri::Window;
@@ -59,36 +60,36 @@ fn run_app(
 fn run_java(data_dir: &&String, cp: &&String, cfg: &&AppConfig, sdk_path: PathBuf) -> Result<Result<ExitStatus, Error>, Error> {
     #[allow(unused_mut)]
     #[cfg(target_os = "linux")]
-    let status = process::Command::new(sdk_path)
-        .args(["-cp", &cp, &cfg.main_class.as_ref().unwrap()])
-        .stderr(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stdin(Stdio::inherit())
+    let status = process::Command::new("nohup")
+        .args([sdk_path.to_str().unwrap(), "-cp", &cp, &cfg.main_class.as_ref().unwrap()])
+        .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .stdin(Stdio::null())
         .current_dir((&data_dir).to_string() + "/apps/" + &cfg.app)
-        .spawn()?.wait()?;
+        .spawn()?.try_wait()?;
 
     #[allow(unused_mut)]
     #[cfg(target_os = "macos")]
     let status = process::Command::new(sdk_path)
         .args(["-cp", &cp, &cfg.main_class.as_ref().unwrap()])
-        .stderr(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stdin(Stdio::inherit())
+        .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .stdin(Stdio::null())
         .current_dir((&data_dir).to_string() + "/apps/" + &cfg.app)
-        .spawn()?.wait()?;
+        .spawn()?.try_wait()?;
 
     #[allow(unused_mut)]
     #[cfg(target_os = "windows")]
     let status = process::Command::new(sdk_path)
         .args(["-cp", &cp, &cfg.main_class.as_ref().unwrap()])
-        .stderr(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stdin(Stdio::inherit())
+        .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .stdin(Stdio::null())
         .current_dir((&data_dir).to_string() + "/apps/" + &cfg.app)
         .creation_flags(DETACHED_PROCESS)
-        .spawn()?.wait()?;
+        .spawn()?.try_wait()?;
 
-    Ok(Ok(status))
+    Ok(Ok(status.unwrap_or_default()))
 }
 
 fn run_python(data_dir: &&String, cfg: &&AppConfig, sdk_path: PathBuf) -> Result<Result<ExitStatus, Error>, Error> {
@@ -96,34 +97,34 @@ fn run_python(data_dir: &&String, cfg: &&AppConfig, sdk_path: PathBuf) -> Result
     #[cfg(target_os = "linux")]
     let status = process::Command::new(sdk_path)
         .args([&cfg.main_class.as_ref().unwrap()])
-        .stderr(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stdin(Stdio::inherit())
+        .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .stdin(Stdio::null())
         .current_dir((&data_dir).to_string() + "/apps/" + &cfg.app)
-        .spawn()?.wait()?;
+        .spawn()?.try_wait()?;
 
     #[allow(unused_mut)]
     #[cfg(target_os = "macos")]
     let status = process::Command::new(sdk_path)
         .args([&cfg.main_class.as_ref().unwrap()])
-        .stderr(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stdin(Stdio::inherit())
+        .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .stdin(Stdio::null())
         .current_dir((&data_dir).to_string() + "/apps/" + &cfg.app)
-        .spawn()?.wait()?;
+        .spawn()?.try_wait()?;
 
     #[allow(unused_mut)]
     #[cfg(target_os = "windows")]
     let status = process::Command::new(sdk_path)
         .args([&cfg.main_class.as_ref().unwrap()])
-        .stderr(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stdin(Stdio::inherit())
+        .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .stdin(Stdio::null())
         .current_dir((&data_dir).to_string() + "/apps/" + &cfg.app)
         .creation_flags(DETACHED_PROCESS)
-        .spawn()?.wait()?;
+        .spawn()?.try_wait()?;
 
-    Ok(Ok(status))
+    Ok(Ok(status.unwrap_or_default()))
 }
 
 fn run_bin(data_dir: &&String, cfg: &&AppConfig, sdk_path: PathBuf, args: Vec<String>) -> Result<Result<ExitStatus, Error>, Error> {
@@ -131,32 +132,32 @@ fn run_bin(data_dir: &&String, cfg: &&AppConfig, sdk_path: PathBuf, args: Vec<St
     #[cfg(target_os = "linux")]
     let status = process::Command::new(sdk_path)
         .args(&args)
-        .stderr(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stdin(Stdio::inherit())
+        .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .stdin(Stdio::null())
         .current_dir((&data_dir).to_string() + "/apps/" + &cfg.app)
-        .spawn()?.wait()?;
+        .spawn()?.try_wait()?;
 
     #[allow(unused_mut)]
     #[cfg(target_os = "macos")]
     let status = process::Command::new(sdk_path)
         .args(&args)
-        .stderr(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stdin(Stdio::inherit())
+        .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .stdin(Stdio::null())
         .current_dir((&data_dir).to_string() + "/apps/" + &cfg.app)
-        .spawn()?.wait()?;
+        .spawn()?.try_try_wait()?;
 
     #[allow(unused_mut)]
     #[cfg(target_os = "windows")]
-    let status = process::Command::new(sdk_path)
+    let status: Option<ExitStatus> = process::Command::new(sdk_path)
         .args(&args)
-        .stderr(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stdin(Stdio::inherit())
+        .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .stdin(Stdio::null())
         .current_dir((&data_dir).to_string() + "/apps/" + &cfg.app)
         .creation_flags(DETACHED_PROCESS)
-        .spawn()?.wait()?;
+        .spawn()?.try_wait()?;
 
-    Ok(Ok(status))
+    Ok(Ok(status.unwrap_or_default()))
 }

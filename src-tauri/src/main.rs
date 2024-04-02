@@ -206,10 +206,10 @@ struct DownloadMeta {
     last_modified: String,
 }
 
-async fn download_file(app: AppHandle, client: Client, url: &str) -> Option<PathBuf> {
+async fn download_file(app: AppHandle, client: Client, name: &str, url: &str) -> Option<PathBuf> {
     // Download the meta file using the `url` provided
     let mut buf = Path::new(&util::get_data_dir()).to_path_buf();
-    let string = format!("temp/{}", uuid::Uuid::new_v4());
+    let string = format!("temp/{}", name);
     buf.push(string);
     let path = buf;
     match net::download_file(app, client, url.to_string(), path.clone()).await {
@@ -245,7 +245,7 @@ async fn download(app_handle: AppHandle, profile_state: State<'_, Profiles>, id:
 
     let meta: DownloadMeta = serde_json::from_str(&meta_str).map_err(|e| Error::Download(format!("Failed to parse download meta!")))?;
 
-    let downloaded_file = download_file(app_handle, client, &meta.download_url).await;
+    let downloaded_file = download_file(app_handle, client, meta.name.as_str(), &meta.download_url).await;
 
     if downloaded_file.is_none() {
         return Err(Error::Download("Failed to download file".to_string()));

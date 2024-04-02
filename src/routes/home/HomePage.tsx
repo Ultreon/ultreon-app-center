@@ -17,6 +17,10 @@ document.oncontextmenu = e => {
 let onprogress = (_payload: DownloadInfo) => {
 };
 
+export function setOnProgress(payload: (payload: DownloadInfo) => void) {
+    onprogress = payload
+}
+
 listen('downloadProgress', (progress) => {
     onprogress(progress.payload as DownloadInfo)
 });
@@ -125,7 +129,7 @@ function hideModal() {
     inputElem.value = "";
 }
 
-class DownloadInfo {
+export class DownloadInfo {
     downloaded: number = 0;
     total: number = 0;
     percent: number = 0;

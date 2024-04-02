@@ -5,6 +5,7 @@ import {Project} from "../../apps/ProjectInfo.tsx";
 import './ProjectPage.css';
 import {invoke} from "@tauri-apps/api";
 import {appLocalDataDir} from "@tauri-apps/api/path";
+import {DownloadInfo, setOnProgress} from "../home/HomePage.tsx";
 
 async function downloadProject(id: string) {
     const meta_url = "https://ultreon.github.io/cdn/project/" + id + ".dl_meta.json"
@@ -30,6 +31,7 @@ export default function ProjectPage() {
     const [id, setId] = useState<string>("");
     const [project, setProject] = useState<Project | null>(null); // [project, setProject]
     const [error, setError] = useState<string | null>(null);
+    const [progress, setProgress] = useState<DownloadInfo>(new DownloadInfo());
 
     useEffect(() => {
         const loadProject = async () => {
@@ -88,6 +90,9 @@ export default function ProjectPage() {
                         <span className="ProjectBanner" style={style}/>
                         <span className="ProjectIcon" style={style}/>
                         <button className="ProjectButton Disabled">Loading...</button>
+                        <div>
+                            <p className="ProjectDetailValue">Loading Tags...</p>
+                        </div>
                         <p className="ProjectDetail">Stage: <span className="ProjectDetailValue">Loading...</span></p>
                         <p className="ProjectDetail">Version: <span className="ProjectDetailValue">Loading...</span></p>
                     </div>
@@ -108,11 +113,13 @@ export default function ProjectPage() {
             </>
         )
     } else if (project.background === 'image') {
-        style.background = 'url("https://ultreon.github.io/data/project/' + id + '.png")';
-        style.backgroundSize = "cover"
+        style1.background = 'url("https://ultreon.github.io/data/project/' + id + '.png")';
+        style1.backgroundSize = "cover"
     } else {
         style1.background = project.background?.toString();
     }
+
+    style.background = '#0004 url("https://ultreon.github.io/data/project/banner/' + id + '.png")';
 
     style.position = "fixed";
     style.height = (128) + "px";
@@ -120,14 +127,58 @@ export default function ProjectPage() {
     style.zIndex = -2;
     style.borderRadius = "8px";
 
+    function getTags(project: Project): string[] {
+        const tags: string[] = [];
+        if (project.deprecated) {
+            tags.push("Deprecated")
+        }
+        if (project.stage === "alpha") {
+            tags.push("Alpha")
+        }
+        if (project.stage === "beta") {
+            tags.push("Beta")
+        }
+        if (project.sussy) {
+            tags.push("Sussy")
+        }
+        if (project.new) {
+            tags.push("New")
+        }
+        return tags
+    }
+
+    function getTagColor(tag: string): string {
+        if (tag === "Deprecated") {
+            return "#f14"
+        } else if (tag === "Alpha") {
+            return "#70f"
+        } else if (tag === "Beta") {
+            return "#f70"
+        } else if (tag === "Sussy") {
+            return "#a00"
+        } else if (tag === "New") {
+            return "#0a0"
+        } else {
+            return "#fff"
+        }
+    }
+
+    setOnProgress((payload: DownloadInfo) => {
+        setProgress(payload);
+    });
+
     return (
-        <>
             <div className="ProjectInfo" style={style1}>
                 <div className="ProjectSideBar">
                     <span className="ProjectBanner" style={style}/>
                     <img className="ProjectIcon" src={"https://ultreon.github.io/data/project/icon-" + id + ".png"}
                          alt="ProjectIcon"/>
                     <button className={project.comingSoon || project.deprecated ? "ProjectButton Disabled" : "ProjectButton"} onClick={() => project.comingSoon || project.deprecated ? null : downloadProject(id)}>{project.comingSoon ? "Coming Soon" : project.deprecated ? "Deprecated" : "Install"}</button>
+                    <div>
+                        { getTags(project).map(tag => {
+                            return (<span className="ProjectTag" style={{backgroundColor: getTagColor(tag)}}>{tag}</span>)
+                        }) }
+                    </div>
                     <p className="ProjectDetail">Stage: <span
                         className="ProjectDetailValue">{(project.comingSoon ? "In Development" : project.deprecated ? "Deprecated" : project.stage === "alpha" ? "Alpha" : project.stage === "beta" ? "Beta" : "Release")}</span>
                     </p>
@@ -138,8 +189,14 @@ export default function ProjectPage() {
                 <div className="ProjectDescription">
                     <h1 className="Title">{project.name}</h1>
                     <p><i>{project.summary}</i></p>
+                    <div className={progress.downloading ? 'ProgressBar Bottom Shown' : 'ProgressBar'}>
+                        <div id="MainProgressBar" className='ProgressBarInner'
+                             style={{width: (progress.percent) + "%"}}/>
+                        <div id="MainProgressStatus" className='ProgressStatus'>
+                            {progress.status}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </>
     )
 }

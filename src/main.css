@@ -234,3 +234,45 @@ a:hover {
     opacity: 1;
     text-decoration: none;
 }
+
+.ProgressBar {
+    height: 40px;
+    border-radius: 8px;
+    width: calc(100vw - 16px - 86px);
+    position: fixed;
+    opacity: 0;
+    left: 86px;
+    bottom: 56px;
+    display: block;
+    background: #fff4;
+    backdrop-filter: blur(24px);
+    transition: ease-in-out 0.4s;
+}
+
+.ProgressBar.Shown {
+    opacity: 1;
+    bottom: 86px;
+}
+
+.ProgressBar.Bottom {
+    bottom: 0;
+}
+
+.ProgressBar.Shown.Bottom {
+    bottom: 16px;
+}
+
+.ProgressBarInner {
+    height: 100%;
+    border-radius: 8px;
+    width: 0;
+    display: block;
+    background: #fff4;
+    transition: width ease-in-out 0.75s;
+}
+
+.ProgressStatus {
+    position: relative;
+    bottom: 35px;
+    color: black;
+}

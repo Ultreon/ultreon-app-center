@@ -6,7 +6,7 @@
     top: 56px;
     left: 86px;
     height: calc(100vh - 56px - 16px);
-    width: calc(100vw - 56px - 64px);
+    width: calc(100vw - 56px - 48px);
     overflow: hidden;
 }
 
