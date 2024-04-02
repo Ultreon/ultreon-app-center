@@ -1,0 +1,236 @@
+.TitleBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000000;
+    width: calc(100vw);
+    padding: 8px;
+    background-color: transparent;
+    min-height: 40px !important;
+    -webkit-app-region: drag;
+}
+
+.TitleBar.Background {
+    background-color: #000a;
+    backdrop-filter: blur(24px);
+    border-radius: 8px;
+    margin: 16px;
+    padding: 2px;
+    max-width: calc(100vw - 16px - 16px);
+}
+
+.TitleButtonsMacOS {
+    left: 0;
+}
+
+.TitleButtonsOther {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    width: calc(100% - 48px);
+    display: flex;
+    justify-content: space-between;
+}
+
+.TitleLogo {
+    position: absolute;
+    width: 76px;
+    top: 10px;
+    left: 4px;
+    margin-right: 0;
+    display: inline;
+    -webkit-app-region: no-drag;
+}
+
+.TitleButton {
+    height: 32px;
+    padding: 4px 8px;
+    padding-top: 7px;
+    border-radius: 8px;
+    margin: 0;
+    -webkit-app-region: no-drag;
+}
+
+.TitleButtonGroup {
+    display: inline;
+    margin-left: 16px;
+}
+
+.TitleButtonStart {
+    margin-left: 16px;
+    display: inline;
+}
+
+.TitleButtonGroup.Begin .TitleButton {
+    margin: 0;
+    border-radius: 0;
+    justify-self: center;
+    align-self: center;
+}
+
+.TitleButtonGroup.Begin {
+    margin-left: 0;
+    border-radius: 0;
+}
+
+.TitleButtonGroup.Begin .TitleButton:first-of-type {
+    margin-left: 16px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    box-shadow: none;
+}
+
+.TitleButtonGroup.Begin .TitleButton:first-of-type:last-of-type {
+    margin-left: 16px;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.TitleButtonGroup.Begin .TitleButton:last-of-type {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    box-shadow: none;
+}
+
+.TitleButtonGroup.End:last-child .TitleButton {
+    margin-right: 16px;
+}
+
+.TitlesSpace {
+    display: inline;
+    margin-left: 44px;
+}
+
+.TitleButton.Icon {
+    padding: 6px 4px;
+    width: 32px;
+}
+
+.TitleBar .TitleButtonsOther > .TitleButton:hover {
+    background-color: #f13f;
+    outline-color: #f133;
+    color: white;
+}
+
+.TitleButton.Begin {
+    display: inline;
+    align-self: flex-start;
+}
+
+.TitleButton.End {
+    display: inline;
+    justify-self: end;
+    align-self: flex-end;
+    margin-right: 0;
+}
+
+.TitleBarText {
+    top: 8px;
+    left: 0;
+    width: 100vw;
+    display: inline;
+    text-align: center;
+    text-anchor: middle;
+    position: relative;
+    padding: 6px;
+    color: white;
+    border-bottom: 3px solid #fffa;
+}
+
+.TitleSpace {
+    padding: 16px;
+    margin: 16px;
+    top: 25%;
+    position: relative;
+    display: inline;
+    justify-self: end;
+    text-align: center;
+    text-justify: auto;
+    align-self: center;;
+}
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+body {
+    position: relative;
+    color: white;
+    height: 100vh;
+    /* background-image: url("banner.png");
+    background-size: cover; */
+    background: transparent linear-gradient(210deg, #8080a0 0%, #404060 100%);
+    font-family: sans-serif;
+    overflow-y: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 16px;
+    margin: 0;
+    z-index: -1000;
+}
+
+button {
+    background-color: #fffa;
+    backdrop-filter: blur(24px);
+    border: 0;
+    padding: 8px 16px;
+    border-radius: 5px;
+    appearance: none;
+    font-size: 1rem;
+    box-shadow: 0px 8px 28px -6px rgba(24, 24, 24, 0.6);
+    transition: all ease-in 0.1s;
+    cursor: pointer;
+    opacity: 0.9;
+    outline: none;
+    z-index: 0;
+}
+
+button:focus {
+    outline: 4px solid #fff4;
+    z-index: 10;
+}
+
+button:active {
+    outline: 4px solid #fff4;
+    z-index: 10;
+}
+
+button.Disabled {
+    background-color: transparent;
+    outline: 1px solid #fff6 !important;
+    color: #fff6;
+}
+
+button.Disabled:hover {
+    background-color: transparent;
+    outline: 1px solid #fff6 !important;
+    color: #fff6;
+    cursor: not-allowed;
+}
+
+button:active {
+    outline: 4px solid #fff2;
+    z-index: 10;
+}
+
+button:hover {
+    background-color: white;
+    color: #000a;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    height: fit-content;
+    width: fit-content;
+    margin: 10px;
+}
+
+a:hover {
+    opacity: 1;
+    text-decoration: none;
+}

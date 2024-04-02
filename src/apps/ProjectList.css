@@ -1,0 +1,94 @@
+.ProjectList {
+    padding: 16px;
+    background: #000a;
+    backdrop-filter: blur(24px);
+    color: white;
+    width: calc(100% - 32px);
+    height: calc(100vh - 56px - 32px - 16px);
+    overflow-y: scroll;
+    border-radius: 8px;
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-self: start;
+}
+
+.ProjectEntry {
+    border: 1px solid #fff2;
+    padding: 8px;
+    display: flex;
+    margin: 0;
+    width: calc(100% - 24px);
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    border-bottom-width: 0;
+    transition: background-color linear 0.1s;
+    text-decoration: none !important;
+}
+
+.ProjectEntry:hover {
+    background: #fff1;
+}
+
+.ProjectEntry:first-child {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.ProjectEntry:last-child {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-width: 1px;
+}
+
+.ProjectEntry .Icon {
+    display: inline;
+    width: 70px !important;
+    height: 70px !important;
+    margin-right: 25px;
+    border-radius: 8px;
+    /* min-width: 32px !important;
+    min-height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important; */
+    background-size: contain !important;
+}
+
+.ProjectEntry .Details {
+    display: inline;
+    color: white;
+    text-decoration: none !important;
+    border: 0;
+}
+
+.ProjectEntry .Details .Title {
+    font-size: larger;
+    font-weight: bolder;
+    text-decoration: none !important;
+    margin-block-start: 0;
+    margin-block-end: 0.1em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    text-align: start;
+    border: 0;
+}
+
+.ProjectEntry .Details .Summary {
+    color: #888;
+    font-style: italic;
+    text-decoration: none !important;
+    margin-block-start: 0.6em;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    text-align: start;
+    border: 0;
+}
+
+.ProjectEntry:focus {
+    outline: 4px solid #fff6;
+}

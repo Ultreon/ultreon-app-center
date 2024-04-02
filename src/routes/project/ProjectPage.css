@@ -1,0 +1,67 @@
+.ProjectInfo {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.ProjectInfo .ProjectDescription {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: center;
+    align-content: center;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.ProjectInfo .ProjectDescription .Title {
+    font-size: 36pt;
+    font-weight: bolder;
+    text-decoration: none !important;
+    margin-block-start: 0;
+    padding-top: 16px;
+}
+
+.ProjectSideBar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 300px;
+    min-width: 300px;
+    background: #000a;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 8px 24px 8px 8px;
+    backdrop-filter: blur(24px);
+}
+
+.ProjectSideBar .ProjectIcon {
+    width: 64px;
+    height: 64px;
+    margin: 56px 0 24px 8px;
+    box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    background: #000a;
+}
+
+p.ProjectDetail:first-of-type {
+    margin-top: 20px;
+}
+
+p.ProjectDetail {
+    font-weight: 1000;
+    color: #ffff;
+    margin: 4px;
+    text-align: start;
+}
+
+span.ProjectDetailValue {
+    font-weight: normal;
+    font-style: italic;
+    color: #fff9;
+}
+

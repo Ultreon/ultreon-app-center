@@ -1,0 +1,15 @@
+#root {
+    justify-self: start;
+    align-self: start;
+    display: block;
+    position: absolute;
+    top: 56px;
+    left: 86px;
+    height: calc(100vh - 56px - 16px);
+    width: calc(100vw - 56px - 64px);
+    overflow: hidden;
+}
+
+body {
+    overflow: hidden;
+}

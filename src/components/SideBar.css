@@ -1,0 +1,25 @@
+#SideBar {
+    background-color: #000a;
+    height: calc(100% - 56px - 16px);
+    position: fixed;
+    top: 56px;
+    left: 16px;
+    border-radius: 8px;
+    backdrop-filter: blur(24px);
+}
+
+#SideBar a {
+    color: white;
+    text-decoration: none;
+    font-size: 16pt;
+    padding: 4px;
+    width: 24px;
+    height: 24px;
+    display: block;
+    border-radius: 8px;
+    transition: linear 0.12s;
+}
+
+#SideBar a:hover {
+    background: #fff3;
+}

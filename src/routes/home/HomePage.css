@@ -1,0 +1,259 @@
+
+html {
+    background: #00000001;
+    margin: 0;
+    padding: 0;
+}
+
+.Button {
+    min-width: 128px;
+}
+
+.Button.Disabled {
+    background-color: #fff5;
+    cursor: default;
+}
+
+.Hello {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.BottomPanel {
+    display: flex;
+    justify-content: center;
+    align-content: baseline;
+    position: fixed;
+    bottom: 16px;
+    left: 86px;
+    align-self: center;
+    margin: 0;
+    padding: 16px;
+    height: 48px;
+    width: calc(100vw - 64px - 72px);
+    border-radius: 8px;
+    background: #000a;
+    backdrop-filter: blur(24px);
+    z-index: 100;
+}
+
+#PlayButton {
+    backdrop-filter: none !important;
+    display: block;
+    justify-self: center;
+    align-self: baseline;
+    border: 0;
+    background: white;
+    color: #222;
+    font-weight: bolder;
+    height: 100%;
+}
+
+#PlayButton:active {
+    opacity: 0.75;
+}
+
+#PlayButton.Disabled {
+    display: block;
+    justify-self: center;
+    align-self: baseline;
+    border: 1px solid #fff2;
+    background: transparent;
+    color: #fff6;
+    font-weight: bolder;
+    height: 100%;
+}
+
+* {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    cursor: default;
+}
+
+*::-webkit-scrollbar {
+    display: block;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background: #fff1;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    margin: 4px;
+    max-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+    border-width: 4px;
+    background-clip: content-box !important;
+    background: #fff3;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: #fff5;
+}
+
+#SidePanel {
+    position: fixed;
+    top: 60px;
+    width: 250px;
+    height: calc(100vh - 32px - 96px - 60px);
+    background: #000a;
+    border-radius: 8px;
+    backdrop-filter: blur(24px);
+    padding: 8px;
+    z-index: 100;
+    overflow-y: scroll;
+    left: 86px;
+    transition: left ease-out 600ms;
+}
+
+#SidePanel.Opened {
+}
+
+button.ProfileEntry {
+    border-radius: 0;
+    background-color: transparent;
+    backdrop-filter: none;
+    color: #fffa;
+    border: 1px solid #fff2;
+    width: 100%;
+    box-shadow: none;
+    -moz-outline-radius: 4px;
+    outline: 0 !important;
+    cursor: pointer;
+}
+
+button.ProfileEntry.Selected {
+    background-color: #fff2;
+    cursor: default;
+}
+
+button.ProfileEntry:hover {
+    background-color: #fff2;
+}
+
+button.ProfileEntry:focus {
+    z-index: 500;
+}
+
+button.ProfileEntry:active {
+    z-index: 500;
+}
+
+button.ProfileEntry:last-child {
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+button.ProfileEntry:first-child {
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+
+button.ProfileEntry:not(:last-child) {
+    margin-bottom: -1px;
+    border-bottom: 0;
+}
+
+.ModalBackground {
+    display: none;
+    z-index: 100000;
+}
+
+.ModalBackground.Shown {
+    display: flex;
+    opacity: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #0005;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+}
+
+input {
+    border-radius: 8px;
+    background: #fff4;
+    border: 0;
+    padding: 10px;
+    color: white;
+    box-shadow: none;
+    width: calc(100% - 24px);
+    transition: linear 0.2s;
+    margin: 5px;
+    outline: 0 solid #fff4;
+}
+
+input:focus {
+    outline: 5px solid #fff4;
+    border: 0;
+    transition: linear 0.2s;
+}
+
+input:active {
+    outline: 5px solid #fff6;
+    transition: linear 0.2s;
+}
+
+.Modal button {
+    margin: 5px;
+    max-width: fit-content;
+}
+
+.Modal {
+    z-index: 2000;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    min-width: 400px !important;
+    max-width: 400px !important;
+    box-sizing: none;
+    background-color: #fff4;
+    padding: 16px;
+    border-radius: 16px;
+}
+
+.ProgressBar {
+    height: 40px;
+    border-radius: 8px;
+    width: calc(100vw - 16px - 86px);
+    position: fixed;
+    opacity: 0;
+    left: 86px;
+    bottom: 56px;
+    display: block;
+    background: #fff4;
+    backdrop-filter: blur(24px);
+    transition: ease-in-out 0.4s;
+}
+
+.ProgressBar.Shown {
+    opacity: 1;
+    bottom: 86px;
+}
+
+.ProgressBarInner {
+    height: 100%;
+    border-radius: 8px;
+    width: 0;
+    display: block;
+    background: #fff4;
+    transition: width ease-in-out 0.75s;
+}
+
+.ProgressStatus {
+    position: relative;
+    bottom: 35px;
+    color: black;
+}
