@@ -145,7 +145,7 @@ fn run_bin(data_dir: &&String, cfg: &&AppConfig, sdk_path: PathBuf, args: Vec<St
         .stdout(Stdio::null())
         .stdin(Stdio::null())
         .current_dir((&data_dir).to_string() + "/apps/" + &cfg.app)
-        .spawn()?.try_try_wait()?;
+        .spawn()?.try_wait()?;
 
     #[allow(unused_mut)]
     #[cfg(target_os = "windows")]
