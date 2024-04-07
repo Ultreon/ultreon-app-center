@@ -23,7 +23,7 @@ export function ProjectList() {
                             const dir = await appLocalDataDir() + "temp/";
                             if (!await exists(dir)) {
                                 await createDir(dir, {
-                                    recursive: false
+                                    recursive: true
                                 });
                             }
                             try {

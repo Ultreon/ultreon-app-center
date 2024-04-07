@@ -1,3 +1,4 @@
+use std::env::consts::OS;
 #[cfg(target_os = "windows")]
 use std::os::windows::process::CommandExt;
 use std::path::PathBuf;
@@ -38,7 +39,13 @@ fn prepare_run(sdk_info: &SDKInfo, cfg: &AppConfig, data_dir: &String) -> PathBu
         sdk_path = sdk_path.join(inner_path);
     }
 
-    sdk_path = sdk_path.join("bin/java");
+    if OS == "windows" {
+        sdk_path = sdk_path.join("bin/java.exe");
+    } else if OS == "macos" {
+        sdk_path = sdk_path.join("Contents/Home/bin/java");
+    } else if OS == "linux" {
+        sdk_path = sdk_path.join("bin/java");
+    }
     sdk_path
 }
 

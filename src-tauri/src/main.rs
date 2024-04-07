@@ -295,6 +295,7 @@ fn main() {
             for (_, window) in app.windows() {
                 window.set_title("Ultreon AppCenter").unwrap();
                 window.set_maximizable(false).unwrap();
+                window.open_devtools();
             }
             Ok(())
         })
