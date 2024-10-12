@@ -6,6 +6,7 @@ import './ProjectPage.css';
 import {appLocalDataDir} from "@tauri-apps/api/path";
 import {DownloadInfo, setOnProgress} from "../home/HomePage.tsx";
 import {invoke} from "@tauri-apps/api/core";
+import {path} from "@tauri-apps/api";
 
 async function downloadProject(id: string) {
     const meta_url = "https://ultreon.dev/cdn/project/" + id + ".dl_meta.json"
@@ -49,11 +50,11 @@ export default function ProjectPage() {
                 return
             }
             if (projectId !== null && projectObject !== null) return
-            const dir = await appLocalDataDir() + "/temp";
-            if (!await exists(dir + "/page-open-intent.json")) return
+            const dir = await appLocalDataDir() + path.sep() + "temp";
+            if (!await exists(dir + path.sep() + "page-open-intent.json")) return
             let parsed;
             try {
-                parsed = JSON.parse(await readTextFile(dir + "/page-open-intent.json"));
+                parsed = JSON.parse(await readTextFile(dir + path.sep() + "page-open-intent.json"));
             } catch (error) {
                 console.error(error)
                 setError(error?.toString() ?? "Unknown error");

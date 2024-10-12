@@ -9,7 +9,6 @@ import AppsPage from "./routes/apps/AppsPage.tsx";
 import {TitleBar} from "./components/TitleBar.tsx";
 import SideBar from "./components/SideBar.tsx";
 import ProjectPage from "./routes/project/ProjectPage.tsx";
-import {webviewWindow} from "@tauri-apps/api";
 
 const router = createHashRouter([
     {

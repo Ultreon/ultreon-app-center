@@ -4,7 +4,7 @@ import './ProjectList.css'
 import {mkdir, exists, readTextFile, writeTextFile} from "@tauri-apps/plugin-fs";
 import {appLocalDataDir} from "@tauri-apps/api/path";
 import {clearProjectPage} from "../routes/project/ProjectPage.tsx";
-import {logError} from "@tauri-apps/cli/index";
+import {path} from "@tauri-apps/api";
 
 let PROJECT_JSON: Array<ProjectRef> = []
 
@@ -22,7 +22,7 @@ export function ProjectList() {
                             try {
                                 clearProjectPage()
                                 let parsed;
-                                const dir = await appLocalDataDir() + "/temp/";
+                                let dir = await appLocalDataDir() + path.sep() + "temp" + path.sep();
                                 if (!await exists(dir)) {
                                     await mkdir(dir, {
                                         recursive: true
