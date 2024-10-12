@@ -14,6 +14,7 @@
     "fs:write-files",
     "fs:create-app-specific-dirs",
     "fs:scope-appdata",
+    "fs:scope-localdata",
     "fs:allow-mkdir",
     "fs:allow-exists",
     "fs:allow-read-dir",
@@ -22,6 +23,9 @@
     "fs:allow-appdata-write-recursive",
     "fs:allow-appdata-meta-recursive",
     "fs:allow-appdata-read-recursive",
+    "fs:allow-localdata-write-recursive",
+    "fs:allow-localdata-meta-recursive",
+    "fs:allow-localdata-read-recursive",
     "fs:allow-write",
     "fs:allow-remove"
   ]
