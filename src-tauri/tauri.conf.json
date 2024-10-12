@@ -39,7 +39,7 @@
     "longDescription": "Ultreon App Center",
     "macOS": {
       "entitlements": null,
-      "exceptionDomain": "",
+      "exceptionDomain": null,
       "frameworks": [],
       "providerShortName": null,
       "signingIdentity": null
