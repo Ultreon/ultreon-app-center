@@ -5,7 +5,7 @@ import {
     useState
 } from 'react';
 import './HomePage.css';
-import {invoke} from '@tauri-apps/api'
+import {invoke} from '@tauri-apps/api/core'
 import {listen} from '@tauri-apps/api/event'
 import {load, Profile, getProfiles} from '../../util/Profiles.tsx';
 import {toast} from 'react-toastify';

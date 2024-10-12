@@ -117,7 +117,7 @@ impl Default for SDKPlatform {
                 "x86_64" => {
                     Self::MacX64
                 }
-                "arm" => {
+                "aarch64" => {
                     Self::MacArm
                 }
                 _ => {
@@ -219,7 +219,7 @@ pub async fn retrieve_sdk(
 pub async fn fetch_sdk(client: Client) -> Result<SDKList, Error> {
     let value: SDKList = serde_json::from_slice(
         &client
-            .get("https://ultreon.github.io/metadata/sdks.json")
+            .get("https://ultreon.dev/metadata/sdks.json")
             .send()
             .await?
             .bytes()

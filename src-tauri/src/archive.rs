@@ -4,14 +4,14 @@ use std::path::Path;
 
 use flate2::read::GzDecoder;
 use tar::Archive;
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter, Manager};
 use zip::ZipArchive;
 
 use crate::net::DownloadInfo;
 
 pub fn extract_tar_gz(app: AppHandle, name: &str, output_dir: &String, archive: &mut Archive<GzDecoder<File>>) -> Result<(), String> {
 // Emit event
-    app.emit_all(
+    app.emit(
         "downloadProgress",
         DownloadInfo {
             downloaded: 0,
@@ -41,7 +41,7 @@ pub fn extract_tar_gz(app: AppHandle, name: &str, output_dir: &String, archive: 
         println!("Extracting: {}/{}", name, path.to_string_lossy());
 
         // Emit event
-        app.emit_all(
+        app.emit(
             "downloadProgress",
             DownloadInfo {
                 downloaded: extracted as u64,
@@ -74,7 +74,7 @@ pub fn extract_tar_gz(app: AppHandle, name: &str, output_dir: &String, archive: 
     }
 
     // Emit event
-    app.emit_all(
+    app.emit(
         "downloadProgress",
         DownloadInfo {
             downloaded: 1,
@@ -90,7 +90,7 @@ pub fn extract_tar_gz(app: AppHandle, name: &str, output_dir: &String, archive: 
 
 pub fn extract_zip(app: AppHandle, name: &str, output_dir: &String, archive: &mut ZipArchive<File>) -> Result<(), String> {
 // Emit event
-    app.emit_all(
+    app.emit(
         "downloadProgress",
         DownloadInfo {
             downloaded: 0,
@@ -110,7 +110,7 @@ pub fn extract_zip(app: AppHandle, name: &str, output_dir: &String, archive: &mu
         let mut file = archive.by_index(i).map_err(|e| format!("Failed to get zip file: {:?}", e))?;
 
         // Emit event
-        app.emit_all(
+        app.emit(
             "downloadProgress",
             DownloadInfo {
                 downloaded: extracted as u64,
@@ -149,7 +149,7 @@ pub fn extract_zip(app: AppHandle, name: &str, output_dir: &String, archive: &mu
     }
 
     // Emit event
-    app.emit_all(
+    app.emit(
         "downloadProgress",
         DownloadInfo {
             downloaded: 1,

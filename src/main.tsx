@@ -9,7 +9,7 @@ import AppsPage from "./routes/apps/AppsPage.tsx";
 import {TitleBar} from "./components/TitleBar.tsx";
 import SideBar from "./components/SideBar.tsx";
 import ProjectPage from "./routes/project/ProjectPage.tsx";
-import {window as appWindow} from "@tauri-apps/api";
+import {webviewWindow} from "@tauri-apps/api";
 
 const router = createHashRouter([
     {
@@ -48,6 +48,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </React.StrictMode>
 )
 
-appWindow.appWindow.setTitle("Ultreon App Center").catch(e => {
-    console.error(e)
-})
+// appWindow.appWindow.setTitle("Ultreon App Center").catch(e => {
+//     console.error(e)
+// })

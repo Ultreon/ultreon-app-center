@@ -1,8 +1,6 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-extern crate msgbox;
-
 use std::fs::{File, OpenOptions};
 use std::path::{Path, PathBuf};
 use std::process::exit;
@@ -10,9 +8,10 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 
 use serde_json::from_reader;
-use tauri::{AppHandle, generate_handler, Manager, State, Window};
-use tauri::api::dialog::blocking::FileDialogBuilder;
-
+use tauri::{AppHandle, generate_handler, Manager, State, Window, generate_context};
+use tauri::async_runtime::block_on;
+use tauri_plugin_dialog::DialogExt;
+use tauri_plugin_fs::FilePath;
 use profiles::Profiles;
 
 use crate::profiles::Profile;
@@ -49,9 +48,7 @@ async fn launch(
     profile: Profile,
 ) -> Result<i32, Error> {
     let client = net::build_client()?;
-
-    let sdk_list: SDKList = sdk::fetch_sdk(client.to_owned())
-        .await
+    let sdk_list = sdk::fetch_sdk(client.to_owned()).await
         .map_err(|e| Error::Fetch(format!("Failed to fetch SDK: {:?}", e)))?;
 
     let version_dir =
@@ -89,8 +86,7 @@ async fn launch(
     let sdk_info = sdk_info.ok_or_else(|| {
         Error::Launch(format!("No compatible versions found: {}", &x))
     })?;
-    sdk::retrieve_sdk(app, client, sdk_info, &cfg, &_meta)
-        .await
+    sdk::retrieve_sdk(app, client, sdk_info, &cfg, &_meta).await
         .map_err(Error::Launch)?;
 
     let app: String = profile.app;
@@ -123,8 +119,11 @@ async fn launch(
     Err(Error::Launch(format!("App crashed, exit code: {}", code)))
 }
 
-#[tauri::command(async)]
-fn load_profiles(profile_state: State<'_, Profiles>) -> Result<Vec<Profile>, Error> {
+#[tauri::command]
+async fn load_profiles(
+    app: AppHandle,
+    window: Window,
+    profile_state: State<'_, Profiles>) -> Result<Vec<Profile>, Error> {
     println!("Loading profiles.");
     let mutex_profiles = &mut profile_state.inner().0.lock()?;
     if !mutex_profiles.is_empty() {
@@ -151,50 +150,39 @@ fn load_profiles(profile_state: State<'_, Profiles>) -> Result<Vec<Profile>, Err
     Ok(profiles)
 }
 
-fn import(profile_state: State<'_, Profiles>, name: String) -> Result<Profile, Error> {
-    let path_buf = FileDialogBuilder::new().pick_file();
-    if path_buf.is_none() {
-        return Ok(Profile {
-            app: "error".to_string(),
-            name: "ERROR".to_string(),
-            version: "error".to_string(),
-        });
-    };
+fn import(
+    app: AppHandle,
+    window: Window,
+    profile_state: State<'static, Profiles>,
+    name: String,
+) {
+    app.dialog().file().pick_file(move |file_path| {
+        if file_path.is_none() {
+            return;
+        }
 
-    let path = &path_buf
-        .unwrap()
-        .to_str()
-        .unwrap()
-        .to_string()
-        .as_mut()
-        .to_owned();
+        let file_path = file_path.unwrap();
 
-    let file = File::open(path)?;
-    #[allow(unused_qualifications)]
-        let profile = crate::profiles::list_zip_contents(&file, &name)?;
-    drop(file);
+        let path_buf = &file_path
+            .as_path();
 
-    let mut profile_mutex = profile_state.inner().0.try_lock()?;
-    profile_mutex.push(profile.clone());
+        if path_buf.is_none() {
+            return;
+        }
 
-    let path = &Path::new(&util::get_data_dir())
-        .to_path_buf()
-        .join("apps.json");
-    let mut options = &mut OpenOptions::new();
-    if !Path::exists(path) {
-        options = options.create_new(true);
-    }
-
-    let open = options.write(true).open(path)?;
-
-    let mut profiles = vec![];
-    let binding = profile_mutex;
-    for profile in binding.iter() {
-        profiles.push(profile)
-    }
-    serde_json::to_writer(open, &profiles)?;
-
-    Ok(profile)
+        let path = path_buf
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string()
+            .as_mut()
+            .to_owned();
+        let file = File::open(path).unwrap();
+        let profile = crate::profiles::list_zip_contents(&file, &name).unwrap();
+        drop(file);
+        let mut profile_mutex = profile_state.inner().0.try_lock().unwrap();
+        profile_mutex.push(profile);
+    });
 }
 
 #[derive(Deserialize)]
@@ -218,10 +206,10 @@ async fn download_file(app: AppHandle, client: Client, name: &str, url: &str) ->
     }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 async fn download(app_handle: AppHandle, profile_state: State<'_, Profiles>, id: String, url: String) -> Result<Profile, Error> {
     // Download the meta file using the `url` provided
-    let client = reqwest::Client::new();
+    let client = Client::new();
     let resp = client.get(url).send().await?;
     if !resp.status().is_success() {
         return Err(Error::Download("Failed to fetch download meta".to_string()));
@@ -263,7 +251,7 @@ async fn download(app_handle: AppHandle, profile_state: State<'_, Profiles>, id:
     let name = meta.name;
 
     #[allow(unused_qualifications)]
-        let profile = crate::profiles::list_zip_contents(&file, &name)?;
+    let profile = crate::profiles::list_zip_contents(&file, &name)?;
     drop(file);
 
     let mut profile_mutex = profile_state.inner().0.try_lock()?;
@@ -289,15 +277,19 @@ async fn download(app_handle: AppHandle, profile_state: State<'_, Profiles>, id:
     Ok(profile)
 }
 
-fn main() {
-    let run = tauri::Builder::default()
-        .setup(|app| {
+#[tokio::main]
+async fn main() {
+    let mut builder = tauri::Builder::default();
+    builder = builder.plugin(tauri_plugin_devtools::init()).plugin(tauri_plugin_devtools_app::init());
+    let run = builder.setup(|app| {
             for (_, window) in app.windows() {
                 window.set_title("Ultreon AppCenter").unwrap();
                 window.set_maximizable(false).unwrap();
             }
+
             Ok(())
         })
+        .plugin(tauri_plugin_fs::init())
         .manage(Profiles(Default::default()))
         .invoke_handler(generate_handler![
             close,
@@ -305,7 +297,7 @@ fn main() {
             download,
             load_profiles
         ])
-        .run(tauri::generate_context!());
+        .run(generate_context!());
     if run.is_err() {
         util::show_error(&run.expect_err("").to_string());
         panic!("Error Occurred");

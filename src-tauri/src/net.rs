@@ -1,6 +1,6 @@
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use tauri::{AppHandle, Manager, Runtime};
+use tauri::{AppHandle, Emitter, Manager, Runtime};
 use std::path::{Path, PathBuf};
 use std::fs::File;
 use std::io::Write;
@@ -54,7 +54,7 @@ pub async fn download_file<R: Runtime>(
             .map_err(|e| Error::Download(format!("Failed to write to file: {:?}", e)))?;
 
         // Emit event
-        app.emit_all(
+        app.emit(
             "downloadProgress",
             DownloadInfo {
                 downloaded: downloaded_size,

@@ -3,8 +3,7 @@ use std::io;
 use std::path::PathBuf;
 
 use semver::VersionReq;
-use tauri::InvokeError;
-
+use tauri::ipc::InvokeError;
 use crate::app::{AppConfig, AppMetadata};
 
 #[cfg(target_os = "linux")]

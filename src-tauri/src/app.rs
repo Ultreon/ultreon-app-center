@@ -43,7 +43,7 @@ impl App {
     pub(crate) async fn info(&self, client: Client) -> Result<AppInfo, Error> {
         let value: AppInfo = serde_json::from_slice(
             &client
-                .get("https://ultreon.github.io/metadata/app/".to_owned() + &self.name + ".json")
+                .get("https://ultreon.dev/metadata/app/".to_owned() + &self.name + ".json")
                 .send()
                 .await?
                 .bytes()
@@ -62,7 +62,7 @@ pub struct AppList {
 pub async fn fetch_apps(client: Client) -> Result<AppList, Error> {
     let value: AppList = serde_json::from_slice(
         &client
-            .get("https://ultreon.github.io/metadata/apps.json")
+            .get("https://ultreon.dev/metadata/apps.json")
             .send()
             .await?
             .bytes()

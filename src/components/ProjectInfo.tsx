@@ -33,7 +33,7 @@ export default function ProjectPage(id: string) {
             }
             if (projectId !== null && projectObject !== null) return
             projectId = id;
-            const response = await window.fetch("https://ultreon.github.io/data/project/" + id + ".json");
+            const response = await window.fetch("https://ultreon.dev/data/project/" + id + ".json");
 
             if (!response.ok) {
                 setError("Fetch returned status " + response.status);
@@ -81,7 +81,7 @@ export default function ProjectPage(id: string) {
             </>
         )
     } else if (project.background === 'image') {
-        style.background = 'url("https://ultreon.github.io/data/project/' + id + '.png")';
+        style.background = 'url("https://ultreon.dev/data/project/' + id + '.png")';
         style.backgroundSize = "cover"
     } else {
         style1.background = project.background?.toString();

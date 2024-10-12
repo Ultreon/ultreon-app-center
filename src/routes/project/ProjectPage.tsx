@@ -1,14 +1,14 @@
-import {exists, readTextFile} from "@tauri-apps/api/fs";
+import {exists, readTextFile} from "@tauri-apps/plugin-fs";
 import {useEffect, useState} from "react";
 import {Project} from "../../apps/ProjectInfo.tsx";
 
 import './ProjectPage.css';
-import {invoke} from "@tauri-apps/api";
 import {appLocalDataDir} from "@tauri-apps/api/path";
 import {DownloadInfo, setOnProgress} from "../home/HomePage.tsx";
+import {invoke} from "@tauri-apps/api/core";
 
 async function downloadProject(id: string) {
-    const meta_url = "https://ultreon.github.io/cdn/project/" + id + ".dl_meta.json"
+    const meta_url = "https://ultreon.dev/cdn/project/" + id + ".dl_meta.json"
 
     try {
         await invoke("download", {id: id, url: meta_url})
@@ -49,7 +49,7 @@ export default function ProjectPage() {
                 return
             }
             if (projectId !== null && projectObject !== null) return
-            const dir = await appLocalDataDir() + "temp";
+            const dir = await appLocalDataDir() + "/temp";
             if (!await exists(dir + "/page-open-intent.json")) return
             let parsed;
             try {
@@ -62,7 +62,7 @@ export default function ProjectPage() {
             }
             setId(parsed["cur-project-id"] as string);
             projectId = parsed["cur-project-id"] as string;
-            const response = await window.fetch("https://ultreon.github.io/data/project/" + parsed["cur-project-id"] + ".json");
+            const response = await window.fetch("https://ultreon.dev/data/project/" + parsed["cur-project-id"] + ".json");
 
             if (!response.ok) {
                 setError("Fetch returned status " + response.status);
@@ -113,13 +113,13 @@ export default function ProjectPage() {
             </>
         )
     } else if (project.background === 'image') {
-        style1.background = 'url("https://ultreon.github.io/data/project/' + id + '.png")';
+        style1.background = 'url("https://ultreon.dev/data/project/' + id + '.png")';
         style1.backgroundSize = "cover"
     } else {
         style1.background = project.background?.toString();
     }
 
-    style.background = '#0004 url("https://ultreon.github.io/data/project/banner/' + id + '.png")';
+    style.background = '#0004 url("https://ultreon.dev/data/project/banner/' + id + '.png")';
 
     style.position = "fixed";
     style.height = (128) + "px";
@@ -171,7 +171,7 @@ export default function ProjectPage() {
             <div className="ProjectInfo" style={style1}>
                 <div className="ProjectSideBar">
                     <span className="ProjectBanner" style={style}/>
-                    <img className="ProjectIcon" src={"https://ultreon.github.io/data/project/icon-" + id + ".png"}
+                    <img className="ProjectIcon" src={"https://ultreon.dev/data/project/icon-" + id + ".png"}
                          alt="ProjectIcon"/>
                     <button className={project.comingSoon || project.deprecated ? "ProjectButton Disabled" : "ProjectButton"} onClick={() => project.comingSoon || project.deprecated ? null : downloadProject(id)}>{project.comingSoon ? "Coming Soon" : project.deprecated ? "Deprecated" : "Install"}</button>
                     <div>
